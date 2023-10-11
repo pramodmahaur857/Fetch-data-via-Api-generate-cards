@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { useEffect,useState } from 'react'
+import Card from "./Card"
+import axios from "axios";
+import './App.css'
+const style = {
+  backgroundColor:"black",
+  color:"white",
+  padding:"1% 2%",
+  marginBottom:"10px",
+  fontFamily:"Arial"
 }
+export default function App() {
+  const [data,setData] = useState([])
+  useEffect(()=>{
+    axios.get("https://jsonplaceholder.typicode.com/users")
+    .then((rej)=>setData(rej.data))
+  },[])
 
-export default App;
+  const del = (ind)=>{
+   const result = data.filter((item)=>{
+      return item.id!==ind
+    })
+    setData(result)
+  }
+  
+  return (
+    <main>
+        <div style={{...style}}>
+          <h4 >Fetch data from API, generated cards and adding some functionality like delete or edit</h4>
+        </div>
+      <Card resultItem ={data} del={del}  setData={setData}/>
+    </main>
+  )
+}
